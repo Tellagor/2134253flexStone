@@ -1,0 +1,54 @@
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+
+  /* Accent (matches screenshot CTA + kicker) */
+  --accent: #c75a3a;
+
+  /* Header */
+  --header-height: 80px;
+  --layout-max-width: 1466px;
+  --layout-columns: 10;
+  --layout-gutter: 20px;
+  --layout-side-padding-min: 16px;
+  --layout-side-padding: max(
+    var(--layout-side-padding-min),
+    calc((100vw - var(--layout-max-width)) / 2)
+  );
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  overflow-x: clip;
+  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto,
+    Arial, sans-serif;
+}
+
+.fst-container {
+  padding-inline: var(--layout-side-padding);
+}
+
+.fst-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--layout-columns), minmax(0, 1fr));
+  column-gap: var(--layout-gutter);
+}
+
+.fst-fullbleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}

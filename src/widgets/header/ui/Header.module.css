@@ -1,0 +1,14 @@
+.root {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+}
+
+.grid {
+  align-items: center;
+}
+
+.brand {
+  text-decoration: none;
+  color: inherit;
+}
