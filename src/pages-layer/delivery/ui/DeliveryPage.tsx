@@ -4,9 +4,11 @@ import { DeliveryCharacteristics, DeliveryHero, DeliveryMethods } from "@/widget
 export function DeliveryPage() {
   return (
     <main className={styles.main}>
-      <DeliveryHero />
-      <DeliveryMethods />
-      <DeliveryCharacteristics />
+      <div className={styles.stack}>
+        <DeliveryHero />
+        <DeliveryMethods />
+        <DeliveryCharacteristics />
+      </div>
     </main>
   );
 }
