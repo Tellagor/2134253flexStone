@@ -1,4 +1,5 @@
 import styles from "./Header.module.css";
+import Link from "next/link";
 
 export function Header() {
 	return (
@@ -6,9 +7,9 @@ export function Header() {
 			<div className="fst-container">
 				<div className={"fst-grid " + styles.grid}>
 					<div style={{ gridColumn: "1 / span 3" }}>
-						<a className={styles.brand} href="/">
+						<Link className={styles.brand} href="/">
 							Flexstone
-						</a>
+						</Link>
 					</div>
 					<nav style={{ gridColumn: "4 / -1" }} aria-label="Primary" />
 				</div>

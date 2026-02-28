@@ -7,4 +7,7 @@ export * from "./faq";
 export * from "./works-scroll";
 export * from "./certificates";
 export * from "./installation-request";
+export * from "./delivery-hero";
+export * from "./delivery-methods";
+export * from "./delivery-characteristics";
 export * from "./footer";

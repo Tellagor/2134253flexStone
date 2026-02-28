@@ -1,0 +1,37 @@
+.main {
+  display: block;
+}
+
+.section {
+  padding: 8px 0 72px 0;
+}
+
+.grid {
+  row-gap: 16px;
+}
+
+.block {
+  grid-column: 1 / span 7;
+  padding: 20px 18px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
+  border-radius: 12px;
+}
+
+.h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.text {
+  margin: 0;
+  color: color-mix(in oklab, var(--foreground) 72%, transparent);
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .block {
+    grid-column: 1 / -1;
+  }
+}
+
