@@ -2,10 +2,8 @@
   --background: #ffffff;
   --foreground: #000000;
 
-  /* Accent (matches screenshot CTA + kicker) */
   --accent: #c75a3a;
 
-  /* Header */
   --header-height: 80px;
   --layout-max-width: 1466px;
   --layout-columns: 10;

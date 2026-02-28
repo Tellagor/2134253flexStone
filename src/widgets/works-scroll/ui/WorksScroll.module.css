@@ -1,0 +1,164 @@
+.section {
+  margin-top: 98px;
+  padding-block: 0;
+}
+
+.fullbleed {
+  padding-inline: 0;
+}
+
+
+.viewport {
+  --slide-w: 700px;
+  --slide-h: 546px;
+  --gap: 40px;
+  --side-scale: 0.943;
+  --step: calc(var(--slide-w) + var(--gap));
+
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+}
+
+.strip {
+  display: flex;
+  align-items: center;
+  touch-action: pan-y;
+  cursor: grab;
+  gap: var(--gap);
+  transform: translateX(calc(-1 * var(--step)));
+}
+
+.slide {
+  flex: 0 0 auto;
+  width: var(--slide-w);
+  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+  height: var(--slide-h);
+  overflow: hidden;
+  transform: scale(var(--side-scale));
+  transform-origin: 50% 50%;
+  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.strip .slide:nth-child(3) {
+  transform: scale(1);
+}
+
+.animNext {
+  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform: translateX(calc(-2 * var(--step)));
+  transform: translateX(calc(-2 * var(--step)));
+}
+
+.animNext .slide:nth-child(3) {
+  transform: scale(var(--side-scale));
+  transform: translateX(0);
+}
+  
+.animNext .slide:nth-child(4) {
+  transform: scale(1);
+}
+
+.animPrev {
+  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.viewportDragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.stripDragging {
+  transition: none;
+}
+
+.stripReturning {
+  transition: transform 260ms ease;
+  transform: translateX(0);
+}
+
+.animPrev .slide:nth-child(3) {
+  transform: scale(var(--side-scale));
+}
+
+.animPrev .slide:nth-child(2) {
+  transform: scale(1);
+}
+
+.snap {
+  transition: none;
+  transform: translateX(calc(-1 * var(--step)));
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.controls {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.dotActive {
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strip,
+  .slide,
+  .animNext,
+  .animPrev {
+    transition: none !important;
+  }
+}
+
+.arrow {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 10px;
+}
+
+@media (max-width: 768px) {
+  .viewport {
+    --slide-w: 320px;
+    --slide-h: 250px;
+    --gap: 16px;
+    --side-scale: 0.94;
+  }
+
+  .controls {
+    gap: 40px;
+  }
+
+  .arrow {
+    font-size: 28px;
+  }
+}

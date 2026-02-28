@@ -5,7 +5,6 @@ export async function GET() {
 
   try {
     const response = await fetch(url, {
-      // Avoid caching a health check.
       cache: "no-store",
     });
 

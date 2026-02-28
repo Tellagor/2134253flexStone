@@ -1,0 +1,134 @@
+.section {
+  margin-top: 98px;
+  padding-block: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #F7F5F2;
+  clip-path: polygon(0 58%, 60% 0, 100% 0, 100% 34%, 42% 100%, 0 100%);
+  z-index: 0;
+}
+
+.grid {
+  align-items: stretch;
+  position: relative;
+  z-index: 1;
+}
+
+.left {
+  grid-column: 1 / span 3;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.text {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.text>span {
+  color: var(--accent);
+}
+
+.price {
+  margin: 61px 0 0;
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.priceValue {
+  color: var(--accent);
+}
+
+.button {
+  margin-top: auto;
+  border: 0;
+  padding: 18px 51px;
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: #ffffff;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.imageWrap {
+  grid-column: 5 / span 6;
+  grid-row: 1 / span 2;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.image {
+  object-fit: contain;
+}
+
+.squares {
+  grid-column: 5 / span 6;
+  grid-row: 3;
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(5, 60.61px);
+  gap: 0px;
+  justify-content: center;
+}
+
+.square {
+  width: 40.61px;
+  height: 40.61px;
+  box-sizing: border-box;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.square[aria-pressed="true"] {
+  border: 3px solid #1F2933;
+}
+
+@media (max-width: 1024px) {
+  .left {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .text {
+    grid-column: 1 / -1;
+  }
+
+  .button {
+    align-self: stretch;
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .imageWrap {
+    grid-column: 1 / -1;
+    margin-top: 24px;
+  }
+
+  .squares {
+    grid-column: 1 / -1;
+  }
+}
