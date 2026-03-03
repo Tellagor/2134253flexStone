@@ -1,0 +1,52 @@
+.scope {
+  --layout-columns: 12;
+  --layout-gutter: 20px;
+  --layout-side-padding: max(var(--layout-side-padding-min), 227px);
+
+  padding-block: 48px 96px;
+}
+
+@media (max-width: 900px) {
+  .scope {
+    --layout-side-padding: var(--layout-side-padding-min);
+  }
+}
+
+.grid {
+  position: relative;
+}
+
+.title {
+  grid-column: 1 / -1;
+  margin: 0 0 102px 0;
+  font-size: 40px;
+  line-height: 1.1;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.col {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.block {
+  width: 100%;
+  background: var(--foreground);
+}
+
+.h304 {
+  height: 304px;
+}
+
+.h624 {
+  height: 624px;
+}
+
+@media (max-width: 1024px) {
+  .col {
+    grid-column: 1 / -1;
+  }
+}
