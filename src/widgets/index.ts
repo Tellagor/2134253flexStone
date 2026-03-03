@@ -10,4 +10,5 @@ export * from "./installation-request";
 export * from "./delivery-hero";
 export * from "./delivery-methods";
 export * from "./delivery-characteristics";
+export * from "./contacts";
 export * from "./footer";

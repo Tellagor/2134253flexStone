@@ -20,21 +20,21 @@ export default function HomePage() {
         <div className="fst-container">
           <div className={"fst-grid " + styles.grid}>
             <p className={styles.kicker}>
-              МЫ ВАЩЕ ДОХУЯ ТАКИЕ
+              Lorem, ipsum dolor sit amet 
               <br />
-              ПИЗДАТЫЕ
+              consectetur 
             </p>
 
             <h1 className={styles.title}>
-              ПОТОМУ ЧТО МЫ ДЕЛАЕМ
+              adipisicing elit. Harum 
               <br />
-              ЗАЕБИСЬ
+              eligendi 
             </h1>
 
             <div className={styles.spacer} />
 
             <p className={styles.description}>
-              МЫ ВООБЩЕ МАКСИМАЛЬНО АХУЕННЫЕ КЛАССНЫЕ ПОТОМУ ЧТО СЕКСИ
+              repellat est ullam qui placeat optio suscipit vel! Facere 
             </p>
 
             <button className={styles.cta} type="button" onClick={open}>

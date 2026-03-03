@@ -1,9 +1,9 @@
 import styles from "./Footer.module.css";
 
 const navLinks = [
+  { href: "", label: "Главная" },
   { href: "#colors", label: "Цвета" },
   { href: "#works", label: "Наши работы" },
-  { href: "#constructor", label: "Конструктор" },
   { href: "#delivery", label: "Доставка" },
   { href: "#contacts", label: "Контакты" },
 ];
