@@ -10,7 +10,7 @@
 .title {
   grid-column: 1 / -1;
   margin: 0;
-  font-size: 36px;
+  font-size: clamp(28px, 4.5vw, 36px);
   line-height: 1.05;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -20,10 +20,11 @@
 .subtitle {
   grid-column: 1 / span 5;
   margin: 0;
-  font-size: 20px;
+  font-size: clamp(16px, 2.6vw, 20px);
   line-height: 1.35;
   /* font-weight: 200; */
   color: color-mix(in oklab, var(--foreground) 90%, transparent);
+  text-wrap: pretty;
 }
 
 .leftCard {
@@ -31,6 +32,8 @@
   height: 539px;
   background: #f3f3f3;
   margin-top: 48px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .leftInner {
@@ -71,6 +74,7 @@
   margin-top: 48px;
   background: #f3f3f3;
   overflow: hidden;
+  border-radius: 12px;
 }
 
 .map {
@@ -93,6 +97,52 @@
   }
 
   .rightCard {
-    min-height: 420px;
+    min-height: 360px;
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 20px 0 56px 0;
+  }
+
+  .grid {
+    row-gap: 18px;
+  }
+
+  .leftInner {
+    padding: 28px 22px;
+    gap: 28px;
+  }
+
+  .blockTitle {
+    font-size: 18px;
+  }
+
+  .blockText {
+    margin-top: 12px;
+    font-size: 16px;
+  }
+
+  .rightCard {
+    min-height: 320px;
+    aspect-ratio: 16 / 11;
+  }
+}
+
+@media (max-width: 520px) {
+  .section {
+    padding: 18px 0 48px 0;
+  }
+
+  .leftInner {
+    padding: 22px 18px;
+    gap: 22px;
+  }
+
+  .rightCard {
+    min-height: 260px;
+    aspect-ratio: 16 / 12;
   }
 }

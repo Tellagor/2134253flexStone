@@ -20,15 +20,11 @@ export default function HomePage() {
         <div className="fst-container">
           <div className={"fst-grid " + styles.grid}>
             <p className={styles.kicker}>
-              Lorem, ipsum dolor sit amet 
-              <br />
-              consectetur 
+              Lorem, ipsum dolor sit amet consectetur
             </p>
 
             <h1 className={styles.title}>
-              adipisicing elit. Harum 
-              <br />
-              eligendi 
+              adipisicing elit. Harum eligendi
             </h1>
 
             <div className={styles.spacer} />

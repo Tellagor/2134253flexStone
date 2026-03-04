@@ -8,8 +8,7 @@ export function Contacts() {
           <h1 className={styles.title}>КОНТАКТЫ</h1>
 
           <p className={styles.subtitle}>
-            Мы производим инновационный отделочный материал, <br />
-            реалистично имитирующий кирпичную кладку
+            Мы производим инновационный отделочный материал, реалистично имитирующий кирпичную кладку
           </p>
 
           <div className={styles.leftCard} aria-label="Contacts info">

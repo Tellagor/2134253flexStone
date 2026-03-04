@@ -109,26 +109,38 @@
 
 @media (max-width: 1024px) {
   .left {
-    grid-column: 1 / -1;
-    grid-row: auto;
+    display: contents;
   }
 
   .text {
     grid-column: 1 / -1;
+    grid-row: 1;
+    margin-bottom: 8px;
+  }
+
+  .price {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 28px;
   }
 
   .button {
-    align-self: stretch;
+    grid-column: 1 / -1;
+    grid-row: 5;
+    justify-self: stretch;
     width: 100%;
-    margin-top: 16px;
+    margin-top: 24px;
   }
 
   .imageWrap {
     grid-column: 1 / -1;
-    margin-top: 24px;
+    grid-row: 3;
+    margin-top: 40px;
   }
 
   .squares {
     grid-column: 1 / -1;
+    grid-row: 4;
+    margin-top: 20px;
   }
 }

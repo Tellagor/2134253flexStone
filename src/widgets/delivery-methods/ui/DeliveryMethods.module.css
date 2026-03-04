@@ -76,3 +76,48 @@
     padding: 20px;
   }
 }
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 32px;
+  }
+
+  .card {
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .icon {
+    height: 128px;
+  }
+
+  .content {
+    width: auto;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .cardTitle {
+    margin-bottom: 16px;
+    font-size: 26px;
+  }
+
+  .cardText {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .icon {
+    height: 110px;
+  }
+
+  .cardTitle {
+    margin-bottom: 12px;
+  }
+}

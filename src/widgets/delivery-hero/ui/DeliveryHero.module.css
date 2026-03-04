@@ -83,3 +83,35 @@
     justify-self: start;
   }
 }
+
+@media (max-width: 768px) {
+  .section {
+    padding-top: 40px;
+  }
+
+  .title {
+    font-size: clamp(28px, 6vw, 40px);
+  }
+
+  .text {
+    font-size: clamp(16px, 3.4vw, 20px);
+    line-height: 1.4;
+    max-width: none;
+  }
+
+  .cta {
+    width: 100%;
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 520px) {
+  .section {
+    padding-top: 32px;
+  }
+
+  .cta {
+    height: 50px;
+    letter-spacing: 0.04em;
+  }
+}

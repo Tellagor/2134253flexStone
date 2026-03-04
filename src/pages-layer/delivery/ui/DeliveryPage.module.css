@@ -8,6 +8,18 @@
   gap: 98px;
 }
 
+@media (max-width: 768px) {
+  .stack {
+    gap: 64px;
+  }
+}
+
+@media (max-width: 520px) {
+  .stack {
+    gap: 48px;
+  }
+}
+
 .section {
   padding: 8px 0 72px 0;
 }

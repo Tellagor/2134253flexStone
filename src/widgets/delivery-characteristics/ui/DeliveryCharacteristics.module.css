@@ -208,3 +208,101 @@
     justify-self: end;
   }
 }
+
+@media (max-width: 768px) {
+  .title {
+    font-size: clamp(28px, 6vw, 36px);
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+    row-gap: 22px;
+    column-gap: 0;
+    padding-top: 8px;
+  }
+
+  .value {
+    font-size: clamp(36px, 9vw, 48px);
+  }
+
+  .unit {
+    font-size: clamp(22px, 5.5vw, 30px);
+  }
+
+  .caption {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  .card {
+    padding: 20px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    row-gap: 14px;
+  }
+
+  .cardTitle {
+    font-size: 30px;
+  }
+
+  .list {
+    grid-column: 1 / -1;
+    margin-top: 16px;
+    gap: 14px;
+  }
+
+  .listText {
+    font-size: 28px;
+  }
+
+  .smallUnit {
+    font-size: 20px;
+  }
+
+  .cta {
+    grid-column: 1 / -1;
+    height: 50px;
+    font-size: 18px;
+  }
+
+  .imageWrap {
+    width: min(320px, 100%);
+    height: auto;
+    justify-self: end;
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 349 / 278;
+  }
+}
+
+@media (max-width: 520px) {
+  .section {
+    padding-bottom: 56px;
+  }
+
+  .cardTitle {
+    font-size: 26px;
+  }
+
+  .listText {
+    font-size: 24px;
+  }
+
+  .dot {
+    width: 14px;
+    height: 14px;
+  }
+
+  .cta {
+    width: 100%;
+    letter-spacing: 0.04em;
+  }
+
+  .imageWrap {
+    justify-self: center;
+    margin-top: 10px;
+  }
+}
