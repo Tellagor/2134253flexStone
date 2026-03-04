@@ -7,87 +7,50 @@
   padding-inline: 0;
 }
 
-
 .viewport {
   --slide-w: 700px;
   --slide-h: 546px;
-  --gap: 40px;
-  --side-scale: 0.943;
-  --step: calc(var(--slide-w) + var(--gap));
+  --gap: 24px;
+  --side-scale: 0.92;
 
   width: 100vw;
   margin-inline: calc(50% - 50vw);
   overflow: hidden;
+  touch-action: pan-y;
 }
 
 .strip {
   display: flex;
   align-items: center;
-  touch-action: pan-y;
   cursor: grab;
-  gap: var(--gap);
-  transform: translateX(calc(-1 * var(--step)));
+  will-change: transform;
+  margin-left: calc(-0.5 * var(--gap));
 }
 
 .slide {
-  flex: 0 0 auto;
-  width: var(--slide-w);
-  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform;
+  flex: 0 0 var(--slide-w);
+  padding-inline: calc(0.5 * var(--gap));
+  min-width: 0;
+}
+
+.slideInner {
+  width: 100%;
   height: var(--slide-h);
   overflow: hidden;
-  transform: scale(var(--side-scale));
+  backface-visibility: hidden;
+}
+
+.slideContent {
+  width: 100%;
+  height: 100%;
+  transform: translateZ(0) scale(var(--side-scale));
   transform-origin: 50% 50%;
-  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
 }
 
-.strip .slide:nth-child(3) {
-  transform: scale(1);
-}
-
-.animNext {
-  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform: translateX(calc(-2 * var(--step)));
-  transform: translateX(calc(-2 * var(--step)));
-}
-
-.animNext .slide:nth-child(3) {
-  transform: scale(var(--side-scale));
-  transform: translateX(0);
-}
-  
-.animNext .slide:nth-child(4) {
-  transform: scale(1);
-}
-
-.animPrev {
-  transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.viewportDragging {
-  cursor: grabbing;
-  user-select: none;
-}
-
-.stripDragging {
-  transition: none;
-}
-
-.stripReturning {
-  transition: transform 260ms ease;
-  transform: translateX(0);
-}
-
-.animPrev .slide:nth-child(3) {
-  transform: scale(var(--side-scale));
-}
-
-.animPrev .slide:nth-child(2) {
-  transform: scale(1);
-}
-
-.snap {
-  transition: none;
-  transform: translateX(calc(-1 * var(--step)));
+.slideContentActive {
+  transform: translateZ(0) scale(1);
 }
 
 .image {
@@ -128,9 +91,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .strip,
-  .slide,
-  .animNext,
-  .animPrev {
+  .slideContent {
     transition: none !important;
   }
 }
@@ -151,7 +112,7 @@
     --slide-w: 320px;
     --slide-h: 250px;
     --gap: 16px;
-    --side-scale: 0.94;
+    --side-scale: 0.92;
   }
 
   .controls {
