@@ -4,10 +4,17 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 
 import { Modal } from "./Modal";
 import { RequestForm } from "./RequestForm";
+import type { LeadType } from "@/shared/types";
 
 type RequestModalContextValue = {
-  open: () => void;
+  open: (context?: RequestModalContext) => void;
   close: () => void;
+};
+
+export type RequestModalContext = {
+  type?: LeadType;
+  productId?: number | null;
+  productNameSnapshot?: string | null;
 };
 
 const RequestModalContext = createContext<RequestModalContextValue | null>(null);
@@ -22,9 +29,16 @@ export function useRequestModal(): RequestModalContextValue {
 
 export function RequestModalProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [context, setContext] = useState<RequestModalContext>({});
 
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
+  const open = useCallback((next?: RequestModalContext) => {
+    setContext(next ?? {});
+    setIsOpen(true);
+  }, []);
+  const close = useCallback(() => {
+    setIsOpen(false);
+    setContext({});
+  }, []);
 
   const value = useMemo(() => ({ open, close }), [open, close]);
 
@@ -32,7 +46,7 @@ export function RequestModalProvider({ children }: { children: React.ReactNode }
     <RequestModalContext.Provider value={value}>
       {children}
       <Modal open={isOpen} onClose={close}>
-        <RequestForm />
+        <RequestForm context={context} onSuccess={close} />
       </Modal>
     </RequestModalContext.Provider>
   );

@@ -224,6 +224,18 @@ CREATE TABLE IF NOT EXISTS contacts_page (
   CONSTRAINT contacts_page_singleton CHECK (id = 1)
 );
 
+CREATE TABLE IF NOT EXISTS colors_page (
+  id                smallint PRIMARY KEY DEFAULT 1,
+  status            content_status NOT NULL DEFAULT 'draft',
+
+  title             text,
+
+  created_at        timestamptz NOT NULL DEFAULT now(),
+  updated_at        timestamptz NOT NULL DEFAULT now(),
+
+  CONSTRAINT colors_page_singleton CHECK (id = 1)
+);
+
 CREATE TABLE IF NOT EXISTS installation_request_section (
   id                smallint PRIMARY KEY DEFAULT 1,
   status            content_status NOT NULL DEFAULT 'draft',
@@ -444,6 +456,20 @@ CREATE TABLE IF NOT EXISTS delivery_pallet_items (
 
 CREATE INDEX IF NOT EXISTS delivery_pallet_items_status_sort_idx ON delivery_pallet_items(status, sort);
 
+CREATE TABLE IF NOT EXISTS colors_textures (
+  id          bigserial PRIMARY KEY,
+  status      content_status NOT NULL DEFAULT 'draft',
+  sort        integer NOT NULL DEFAULT 0,
+
+  label       text NOT NULL,
+  image_id    uuid,
+
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  updated_at  timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS colors_textures_status_sort_idx ON colors_textures(status, sort);
+
 CREATE TABLE IF NOT EXISTS leads (
   id            bigserial PRIMARY KEY,
 
@@ -538,5 +564,67 @@ CREATE INDEX IF NOT EXISTS leads_product_id_idx ON leads(product_id);
 -- ALTER TABLE house_texture_section
 --   ADD CONSTRAINT house_texture_section_cta_file_fk
 --   FOREIGN KEY (cta_file_id) REFERENCES directus_files(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+-- =========================
+-- OPTIONAL: updated_at trigger
+-- =========================
+-- Если используешь created_at/updated_at из этого скрипта, триггер будет автоматически обновлять updated_at.
+-- Если ты планируешь пользоваться только directus date_* полями — этот блок можно удалить.
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'set_updated_at') THEN
+    CREATE OR REPLACE FUNCTION set_updated_at() RETURNS trigger AS $$
+    BEGIN
+      NEW.updated_at = now();
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+  END IF;
+END $$;
+
+DO $$
+DECLARE
+  t text;
+BEGIN
+  FOREACH t IN ARRAY ARRAY[
+    'site_settings',
+    'home_hero',
+    'assortment_section',
+    'works_page',
+    'faq_section',
+    'certificates_section',
+    'house_texture_section',
+    'delivery_hero',
+    'delivery_characteristics_section',
+    'delivery_pallet_card',
+    'contacts_page',
+    'colors_page',
+    'installation_request_section',
+    'navigation_items',
+    'benefits',
+    'assortment_products',
+    'assortment_price_tiers',
+    'assortment_home_products',
+    'works_items',
+    'faq_items',
+    'certificates_items',
+    'house_texture_items',
+    'delivery_methods',
+    'delivery_metrics',
+    'delivery_pallet_items',
+    'colors_textures',
+    'leads'
+  ]
+  LOOP
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = t || '_set_updated_at_trg') THEN
+      EXECUTE format(
+        'CREATE TRIGGER %I BEFORE UPDATE ON %I FOR EACH ROW EXECUTE FUNCTION set_updated_at()',
+        t || '_set_updated_at_trg',
+        t
+      );
+    END IF;
+  END LOOP;
+END $$;
 
 COMMIT;

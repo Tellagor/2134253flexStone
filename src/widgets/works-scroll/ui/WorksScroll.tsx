@@ -1,39 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import styles from "./WorksScroll.module.css";
-
-type WorkImage = {
-  src: string;
-  alt: string;
-};
-
-const rawImages = [
-  "Rectangle 50.png",
-  "Rectangle 51.png",
-  "Rectangle 52.png",
-  "Rectangle 53.png",
-  "Rectangle 54.png",
-  "Rectangle 55.png",
-  "Rectangle 56.png",
-];
-
-function encodePublicPath(path: string) {
-  return path.replace(/ /g, "%20");
-}
+import { createDefaultWorksItems } from "@/shared/lib/works";
+import type { WorkItem } from "@/shared/types";
 
 export function WorksScroll() {
-  const images: WorkImage[] = useMemo(
-    () =>
-      rawImages.map((fileName, index) => ({
-        src: encodePublicPath(`/scroll/${fileName}`),
-        alt: `Выполненная работа ${index + 1}`,
-      })),
-    []
-  );
+  const [images, setImages] = useState<WorkItem[]>(createDefaultWorksItems);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -43,6 +18,28 @@ export function WorksScroll() {
   });
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadItems() {
+      try {
+        const response = await fetch("/api/works?scope=carousel", { cache: "no-store" });
+        if (!response.ok) return;
+        const payload = (await response.json()) as { items?: WorkItem[] };
+        if (!cancelled && Array.isArray(payload.items) && payload.items.length > 0) {
+          setImages(payload.items);
+        }
+      } catch {
+        // Keep fallback images.
+      }
+    }
+
+    void loadItems();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -71,7 +68,7 @@ export function WorksScroll() {
           <div className={styles.strip}>
             {images.map((image, index) => (
               <div
-                key={image.src}
+                key={image.id}
                 className={styles.slide}
                 aria-hidden={index !== selectedIndex}
               >
@@ -85,17 +82,13 @@ export function WorksScroll() {
                         : styles.slideContent
                     }
                   >
-                  <Image
-                    className={styles.image}
-                    src={image.src}
-                    alt={index === selectedIndex ? image.alt : ""}
-                    width={700}
-                    height={546}
-                    draggable={false}
-                    sizes="(max-width: 768px) 320px, 700px"
-                    priority={index < 3}
-                    loading={index < 3 ? "eager" : "lazy"}
-                  />
+                    <img
+                      className={styles.image}
+                      src={image.imageUrl}
+                      alt={image.alt}
+                      draggable={false}
+                      loading={index < 3 ? "eager" : "lazy"}
+                    />
                   </div>
                 </div>
               </div>

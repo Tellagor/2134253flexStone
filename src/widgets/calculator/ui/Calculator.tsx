@@ -45,14 +45,69 @@ function normalizeRuPhoneInput(raw: string) {
 }
 
 export function Calculator({ fields = defaultFields }: Props) {
+  const [name, setName] = useState("");
   const [phoneDigits, setPhoneDigits] = useState("");
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [area, setArea] = useState("");
+  const [city, setCity] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const PRICE_PER_SQM = 1000; // ₽ per 1 кв.м
 
   const phoneValue = formatRuPhone(phoneDigits);
   const phoneInvalid = phoneTouched && phoneDigits.length < 10;
+
+  async function handleSubmit() {
+    if (isSubmitting) return;
+    setNotice(null);
+
+    if (phoneDigits.length < 10) {
+      setPhoneTouched(true);
+      setNotice("Введите корректный номер телефона.");
+      return;
+    }
+
+    const url = typeof window !== "undefined" ? new URL(window.location.href) : null;
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          type: "calculator",
+          name,
+          phone: phoneValue.trim(),
+          city,
+          area_m2: Number(area || 0) || 0,
+          source_url: url?.toString() ?? null,
+          utm_source: url?.searchParams.get("utm_source") ?? null,
+          utm_medium: url?.searchParams.get("utm_medium") ?? null,
+          utm_campaign: url?.searchParams.get("utm_campaign") ?? null,
+          utm_content: url?.searchParams.get("utm_content") ?? null,
+          utm_term: url?.searchParams.get("utm_term") ?? null,
+        }),
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => "");
+        throw new Error(text || `HTTP ${response.status}`);
+      }
+
+      setNotice("Заявка отправлена.");
+      setName("");
+      setPhoneDigits("");
+      setArea("");
+      setCity("");
+      setPhoneTouched(false);
+    } catch {
+      setNotice("Не удалось отправить заявку. Попробуйте еще раз.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <section className={styles.section} aria-label="Calculator">
@@ -78,6 +133,10 @@ export function Calculator({ fields = defaultFields }: Props) {
                       ? phoneValue
                       : field.sanitize === "digits"
                       ? area
+                      : field.name === "name"
+                      ? name
+                      : field.name === "city"
+                      ? city
                       : undefined
                   }
                   maxLength={field.mask === "ru-phone" ? 16 : undefined}
@@ -87,6 +146,10 @@ export function Calculator({ fields = defaultFields }: Props) {
                       ? (event) => setPhoneDigits(normalizeRuPhoneInput(event.currentTarget.value))
                       : field.sanitize === "digits"
                       ? (event) => setArea(event.currentTarget.value.replace(/\D+/g, ""))
+                      : field.name === "name"
+                      ? (event) => setName(event.currentTarget.value)
+                      : field.name === "city"
+                      ? (event) => setCity(event.currentTarget.value)
                       : undefined
                   }
                   onBlur={field.mask === "ru-phone" ? () => setPhoneTouched(true) : undefined}
@@ -102,8 +165,9 @@ export function Calculator({ fields = defaultFields }: Props) {
               <div className={styles.costHint}>Предварительная стоимость</div>
             </div>
 
-            <button className={styles.button} type="button">
-              ОСТАВИТЬ ЗАЯВКУ
+            {notice ? <div className={styles.notice}>{notice}</div> : null}
+            <button className={styles.button} type="button" onClick={handleSubmit} disabled={isSubmitting}>
+              {isSubmitting ? "ОТПРАВКА..." : "ОСТАВИТЬ ЗАЯВКУ"}
             </button>
 
             <div className={styles.preview} aria-label="Preview" />

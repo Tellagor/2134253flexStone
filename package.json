@@ -6,7 +6,8 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "directus:ru": "node scripts/directus-ru-labels.mjs"
   },
   "dependencies": {
     "@directus/sdk": "^21.1.0",

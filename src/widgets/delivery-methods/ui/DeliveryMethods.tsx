@@ -25,20 +25,20 @@ const methods: DeliveryMethod[] = [
     iconSrc: "/icons_delivery/express.png",
     iconAlt: "Экспресс доставка",
   },
-  {
-    id: "avia",
-    title: "Авиаперевозки",
-    description: "Минимальные сроки доставки",
-    iconSrc: "/icons_delivery/avia.png",
-    iconAlt: "Авиаперевозки",
-  },
-  {
-    id: "sea",
-    title: "Морские перевозки",
-    description: "Эффективно для крупногабаритных партий",
-    iconSrc: "/icons_delivery/korablik.png",
-    iconAlt: "Морские перевозки",
-  },
+  // {
+  //   id: "avia",
+  //   title: "Авиаперевозки",
+  //   description: "Минимальные сроки доставки",
+  //   iconSrc: "/icons_delivery/avia.png",
+  //   iconAlt: "Авиаперевозки",
+  // },
+  // {
+  //   id: "sea",
+  //   title: "Морские перевозки",
+  //   description: "Эффективно для крупногабаритных партий",
+  //   iconSrc: "/icons_delivery/korablik.png",
+  //   iconAlt: "Морские перевозки",
+  // },
 ];
 
 export function DeliveryMethods() {

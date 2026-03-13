@@ -1,17 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuestionModal } from "@/shared/ui/QuestionModalProvider";
 
 import styles from "./Faq.module.css";
+import type { FaqItem, FaqSectionContent } from "@/shared/types";
 
-type FaqItem = {
-  id: string;
-  question: string;
-  answer: string;
-};
-
-const items: FaqItem[] = [
+const defaultItems: FaqItem[] = [
   {
     id: "mounting",
     question: "Как происходит монтаж?",
@@ -26,15 +21,61 @@ const items: FaqItem[] = [
   },
 ];
 
+const DEFAULT_TITLE = "ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ";
+const DEFAULT_ASK_BUTTON_TEXT = "ЗАДАТЬ ВОПРОС";
+
 export function Faq() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [items, setItems] = useState<FaqItem[]>(defaultItems);
+  const [section, setSection] = useState<FaqSectionContent>({
+    title: DEFAULT_TITLE,
+    askButtonText: DEFAULT_ASK_BUTTON_TEXT,
+  });
   const questionModal = useQuestionModal();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadFaq() {
+      try {
+        const response = await fetch("/api/faq", { cache: "no-store" });
+        if (!response.ok) return;
+        const payload = (await response.json()) as {
+          items?: FaqItem[];
+          section?: Partial<FaqSectionContent> | null;
+        };
+
+        if (!cancelled && Array.isArray(payload.items) && payload.items.length > 0) {
+          setItems(payload.items);
+        }
+
+        if (
+          !cancelled &&
+          payload.section &&
+          typeof payload.section.title === "string" &&
+          typeof payload.section.askButtonText === "string"
+        ) {
+          setSection({
+            title: payload.section.title.trim() || DEFAULT_TITLE,
+            askButtonText: payload.section.askButtonText.trim() || DEFAULT_ASK_BUTTON_TEXT,
+          });
+        }
+      } catch {
+        // Fallback data is already rendered.
+      }
+    }
+
+    void loadFaq();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section className={styles.section} aria-label="FAQ">
       <div className="fst-container">
         <div className={`fst-grid ${styles.grid}`}>
-          <h2 className={styles.title}>ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
+          <h2 className={styles.title}>{section.title}</h2>
 
           <div className={styles.list} role="list">
             {items.map((item) => {
@@ -81,7 +122,7 @@ export function Faq() {
                 type="button"
                 onClick={() => questionModal.open()}
               >
-                ЗАДАТЬ ВОПРОС
+                {section.askButtonText}
               </button>
             </div>
           </div>

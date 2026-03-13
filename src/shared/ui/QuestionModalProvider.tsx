@@ -32,7 +32,7 @@ export function QuestionModalProvider({ children }: { children: React.ReactNode 
     <QuestionModalContext.Provider value={value}>
       {children}
       <Modal open={isOpen} onClose={close} height={760} constrainToViewport={false}>
-        <QuestionForm />
+        <QuestionForm onSuccess={close} />
       </Modal>
     </QuestionModalContext.Provider>
   );

@@ -1,59 +1,82 @@
-import styles from "./Certificates.module.css";
+"use client";
 
-type CertificateItem = {
-  id: string;
-  title: string;
-  description: string;
-  pdfHref: string;
-};
+import { useEffect, useState } from "react";
+
+import styles from "./Certificates.module.css";
+import {
+  defaultCertificatesItems,
+  defaultCertificatesSectionContent,
+} from "@/shared/api/certificates";
+import type { CertificateItem, CertificatesSectionContent } from "@/shared/types";
 
 const pdfIcon = "/svg/pdf-document-svgrepo-com%204.svg";
 
-const items: CertificateItem[] = [
-  {
-    id: "water",
-    title: "Гарантия качества — Водопоглощение",
-    description:
-      "Материал имеет минимальный уровень водопоглощения, что предотвращает разрушение покрытия при длительном контакте с влагой.",
-    pdfHref: "/pdf/test.pdf",
-  },
-  {
-    id: "frost",
-    title: "Гарантия качества — Морозостойкость",
-    description:
-      "Продукция выдерживает многократные циклы замораживания и оттаивания без образования трещин и сколов.",
-    pdfHref: "/pdf/test.pdf",
-  },
-  {
-    id: "vapor",
-    title: "Гарантия качества — Паропроницаемость",
-    description:
-      "Материал обеспечивает естественный воздухообмен стен, предотвращая накопление влаги внутри конструкции.",
-    pdfHref: "/pdf/test.pdf",
-  },
-  {
-    id: "conformity",
-    title: "Сертификат соответствия",
-    description:
-      "Продукция прошла обязательную сертификацию и полностью соответствует требованиям технических регламентов и нормативных стандартов.",
-    pdfHref: "/pdf/test.pdf",
-  },
-];
-
 export function Certificates() {
+  const [items, setItems] = useState<CertificateItem[]>(defaultCertificatesItems);
+  const [section, setSection] = useState<CertificatesSectionContent>(
+    defaultCertificatesSectionContent
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCertificates() {
+      try {
+        const response = await fetch("/api/certificates", { cache: "no-store" });
+        if (!response.ok) return;
+
+        const payload = (await response.json()) as {
+          items?: CertificateItem[];
+          section?: Partial<CertificatesSectionContent> | null;
+        };
+
+        if (!cancelled && Array.isArray(payload.items) && payload.items.length > 0) {
+          setItems(payload.items);
+        }
+
+        if (
+          !cancelled &&
+          payload.section &&
+          typeof payload.section.title === "string" &&
+          typeof payload.section.subtitle === "string"
+        ) {
+          setSection({
+            title: payload.section.title.trim() || defaultCertificatesSectionContent.title,
+            subtitle:
+              payload.section.subtitle.trim() || defaultCertificatesSectionContent.subtitle,
+            downloadAllHref:
+              typeof payload.section.downloadAllHref === "string"
+                ? payload.section.downloadAllHref
+                : defaultCertificatesSectionContent.downloadAllHref,
+          });
+        }
+      } catch {
+        // Keep fallback content.
+      }
+    }
+
+    void loadCertificates();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section className={styles.section} aria-label="Certificates">
       <div className="fst-container">
         <div className={`fst-grid ${styles.grid}`}>
-          <h2 className={styles.title}>Сертификаты</h2>
-          <p className={styles.subtitle}>
-            Обязательная сертификация продукции проводится в соответствии с
-            требованиями технических регламентов
-          </p>
+          <h2 className={styles.title}>{section.title}</h2>
+          <p className={styles.subtitle}>{section.subtitle}</p>
 
-          <button className={styles.allButton} type="button">
-            Скачать все сертификаты
-          </button>
+          {section.downloadAllHref ? (
+            <a className={styles.allButton} href={section.downloadAllHref} download>
+              Скачать все сертификаты
+            </a>
+          ) : (
+            <button className={styles.allButton} type="button">
+              Скачать все сертификаты
+            </button>
+          )}
 
           <div className={styles.cards} aria-label="Certificates list">
             {items.map((item) => (
@@ -67,7 +90,7 @@ export function Certificates() {
 
                 <a
                   className={styles.downloadButton}
-                  href={item.pdfHref}
+                  href={item.fileHref}
                   download
                   aria-label={`Скачать: ${item.title}`}
                 >

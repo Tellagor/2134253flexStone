@@ -111,3 +111,8 @@
   background: #e0b7a3;
   cursor: not-allowed;
 }
+
+.notice {
+  font-size: 16px;
+  color: #222;
+}

@@ -1,37 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "./Assortment.module.css";
+import { defaultAssortmentItems } from "@/shared/api/assortment";
 import { useRequestModal } from "@/shared/ui/RequestModalProvider";
+import type { AssortmentItem, AssortmentSectionContent } from "@/shared/types";
 
-type AssortmentItem = {
-  id: string;
-};
-
-const items: AssortmentItem[] = [
-  { id: "product-1" },
-  { id: "product-2" },
-  { id: "product-3" },
-  { id: "product-4" },
-];
-
-const productImage = "/Calculate%20background.png";
+const DEFAULT_TITLE = "Ассортимент";
+const DEFAULT_DESCRIPTION =
+  "Фасадные панели, подходящие для облицовки большинства типов оснований стен – у нас Вы можете купить гибкий кирпич для фасада, который оправдает ожидания в вашем проекте.";
 
 export function Assortment() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [items, setItems] = useState<AssortmentItem[]>(defaultAssortmentItems);
+  const [section, setSection] = useState<AssortmentSectionContent>({
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+  });
   const { open } = useRequestModal();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadItems() {
+      try {
+        const response = await fetch("/api/assortment/home", { cache: "no-store" });
+        if (!response.ok) return;
+        const payload = (await response.json()) as {
+          items?: AssortmentItem[];
+          section?: Partial<AssortmentSectionContent> | null;
+        };
+        if (!cancelled && Array.isArray(payload.items) && payload.items.length > 0) {
+          setItems(payload.items);
+        }
+        if (
+          !cancelled &&
+          payload.section &&
+          typeof payload.section.title === "string" &&
+          typeof payload.section.description === "string"
+        ) {
+          setSection({
+            title: payload.section.title.trim() || DEFAULT_TITLE,
+            description: payload.section.description.trim() || DEFAULT_DESCRIPTION,
+          });
+        }
+      } catch {
+        // Fallback data is already rendered.
+      }
+    }
+
+    void loadItems();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section className={styles.section} aria-label="Assortment">
       <div className="fst-container">
         <div className={`fst-grid ${styles.grid}`}>
-          <h2 className={styles.title}>Ассортимент</h2>
-          <p className={styles.description}>
-            Фасадные панели, подходящие для облицовки большинства типов оснований
-            стен – у нас Вы можете купить гибкий кирпич для фасада, который
-            оправдает ожидания в вашем проекте.
-          </p>
+          <h2 className={styles.title}>{section.title}</h2>
+          <p className={styles.description}>{section.description}</p>
 
           <div className={styles.list} aria-label="Products">
             {items.map((item) => (
@@ -42,7 +72,7 @@ export function Assortment() {
                     ? `${styles.card} ${styles.cardOpen}`
                     : styles.card
                 }
-                style={{ backgroundImage: `url(\"${productImage}\")` }}
+                style={{ backgroundImage: `url("${item.imageUrl}")` }}
               >
                 <div
                   className={
@@ -62,28 +92,21 @@ export function Assortment() {
                       ×
                     </button>
 
-                    <h3 className={styles.detailsTitle}>
-                      Гибкий кирпич для фасада на сетке с защитной пленкой
-                    </h3>
+                    <h3 className={styles.detailsTitle}>{item.name}</h3>
 
-                    <p className={styles.detailsText}>
-                      Модуль полезной площадью 0,47 м2, на модуле 24 плитки
-                      размером 240×70 мм, с учетом шва 8–9 мм, толщина 4 мм
-                    </p>
+                    <p className={styles.detailsText}>{item.shortDescription}</p>
 
                     <div className={styles.detailsPrices}>
-                      <div className={styles.detailsRow}>
-                        <span>до 100 м2</span>
-                        <span className={styles.detailsPrice}>1170 ₽</span>
-                      </div>
-                      <div className={styles.detailsRow}>
-                        <span>101 - 299 м2</span>
-                        <span className={styles.detailsPrice}>1170 ₽</span>
-                      </div>
-                      <div className={styles.detailsRow}>
-                        <span>от 300 м2</span>
-                        <span className={styles.detailsPrice}>1170 ₽</span>
-                      </div>
+                      {item.priceTiers.map((tier) => (
+                        <div key={tier.id} className={styles.detailsRow}>
+                          <span>
+                            {formatTierRange(tier.fromM2, tier.toM2)}
+                          </span>
+                          <span className={styles.detailsPrice}>
+                            {tier.priceRub} ₽
+                          </span>
+                        </div>
+                      ))}
                     </div>
 
                     <button
@@ -91,7 +114,12 @@ export function Assortment() {
                       type="button"
                       onClick={() => {
                         setOpenId(null);
-                        open();
+                        const productIdRaw = Number(item.id);
+                        open({
+                          type: "assortment",
+                          productId: Number.isFinite(productIdRaw) ? productIdRaw : null,
+                          productNameSnapshot: item.name,
+                        });
                       }}
                     >
                       ОСТАВИТЬ ЗАЯВКУ
@@ -116,4 +144,10 @@ export function Assortment() {
       </div>
     </section>
   );
+}
+
+function formatTierRange(fromM2: number, toM2: number | null) {
+  if (toM2 === null) return `от ${fromM2} м2`;
+  if (fromM2 === 0) return `до ${toM2} м2`;
+  return `${fromM2} - ${toM2} м2`;
 }

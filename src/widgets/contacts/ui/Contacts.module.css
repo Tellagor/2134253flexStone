@@ -77,6 +77,33 @@
   border-radius: 12px;
 }
 
+.mapWrap {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.mapLink,
+.mapLinkSecond {
+  color: #eee;
+  font-size: 12px;
+  position: absolute;
+  left: 0;
+  text-decoration: none;
+  padding: 0 6px;
+  line-height: 1.2;
+  z-index: 1;
+}
+
+.mapLink {
+  top: 0;
+}
+
+.mapLinkSecond {
+  top: 14px;
+}
+
 .map {
   width: 100%;
   height: 100%;
